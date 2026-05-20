@@ -26,7 +26,7 @@ interface DashboardData {
     id: string;
     name: string;
     sku: string;
-    quantityOnHand: number;
+    quantity: number;
     lowStockThreshold: number;
   }[];
 }
@@ -168,7 +168,7 @@ export default function DashboardPage() {
                     <TableCell>
                       <span
                         className={
-                          item.quantityOnHand === 0
+                          item.quantity === 0
                             ? "text-red-600 font-bold"
                             : "text-amber-600 font-semibold"
                         }
@@ -180,7 +180,7 @@ export default function DashboardPage() {
                       {item.lowStockThreshold}
                     </TableCell>
                     <TableCell>
-                      {item.quantityOnHand === 0 ? (
+                      {item.quantity === 0 ? (
                         <Badge variant="destructive">Out of Stock</Badge>
                       ) : (
                         <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">
