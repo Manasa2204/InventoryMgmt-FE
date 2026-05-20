@@ -24,8 +24,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Plus, Search, Pencil, Trash2, TrendingDown } from "lucide-react";
-import { getProducts } from "@/services/productService";
+import { Plus, Search, Pencil, Trash2, TrendingDown, Eye } from "lucide-react";
+import { deleteProduct, getProducts } from "@/services/productService";
 import useDebounce from "@/hooks/use-debounce";
 import { toast } from "sonner";
 import { StockAdjustDialog } from "@/components/layout/StockAdjustDialog";
@@ -44,8 +44,9 @@ export default function ProductsPage() {
     try {
       const data = await getProducts(debouncedSearchTerm);
       if (data.success) setProducts(data.result);
+      else toast.error(data.message || "Product fetching failed");
     } catch (e) {
-      console.log(e);
+      toast.error(e.message || "Product fetching failed");
     } finally {
       setLoading(false);
     }
@@ -58,10 +59,8 @@ export default function ProductsPage() {
   async function handleDelete() {
     if (!deleteId) return;
     try {
-      const res = await fetch(`/api/products/${deleteId}`, {
-        method: "DELETE",
-      });
-      const data = await res.json();
+      const data = await deleteProduct(deleteId);
+
       if (data.success) {
         setProducts((prev) => prev.filter((p) => p.id !== deleteId));
         toast.success("Product deleted");
@@ -180,6 +179,15 @@ export default function ProductsPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
+                        <Link href={`/products/${product.id}/view`}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </Button>
+                        </Link>
                         <Link href={`/products/${product.id}/edit`}>
                           <Button
                             variant="ghost"

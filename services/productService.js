@@ -34,3 +34,11 @@ export const adjustProduct = async (id, body) => {
 
   return response.data;
 };
+
+export const deleteProduct = async (id) => {
+  const response = await axios.delete(`${API}/${id}`, {
+    withCredentials: true,
+  });
+
+  return response.data;
+};
