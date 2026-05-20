@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { signin, signup, logout, auth } from "@/services/authService";
+import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -49,6 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (data.success) {
           setUser(data.result.user);
           setOrganization(data.result.organization);
+        } else {
+          toast.error("Authentication failed, Please Login");
         }
       })
       .finally(() => setLoading(false));
@@ -70,7 +73,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     name?: string;
   }) {
     const res = await signup(formData);
-
     if (!res.success) throw new Error(res.message);
 
     router.push("/sign-in");
